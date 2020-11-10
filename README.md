@@ -1,5 +1,5 @@
 # linux-camera-background
-Blurs your background on linux for video conferencing.
+Blurs your background on linux for video conferencing. 
 
 # How it works
 This program uses lbp cascades to find face(s) in the video feed, then cuts out the section of the image containing the face(s), stores that section, blurs the original image, and superimposes the cut section on top of the blurred image, then sends the edited frames to another video device.
@@ -40,3 +40,5 @@ python3 -m pip install numpy opencv-contrib-python pyfakewebcam
 ```
 # Usage
 To use the program, run it with `./bg.py`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled.
+# Side notes
+The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. The video may stutter slightly if you move your head a lot (the classifier is kinda slow and cant handle rapid changes). I might do a rewrite in C++ later on to speed it up. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
