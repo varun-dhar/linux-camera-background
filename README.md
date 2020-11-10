@@ -15,7 +15,7 @@ Or do it manually:
 
 Install the v4l2loopback kernel module:
 ```
-sudo apt-get install v4l2loopback-dkms
+sudo apt install v4l2loopback-dkms
 ```
 Add config for v4l2loopback:
 ```
