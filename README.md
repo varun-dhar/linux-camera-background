@@ -6,6 +6,13 @@ This program uses lbp cascades to find face(s) in the video feed, then cuts out 
 # Install
 Debian and deb-based systems:
 
+Clone the repo:
+
+```
+git clone -b "cpp-rewrite" https://github.com/varun-dhar/linux-camera-background.git
+cd linux-camera-background
+```
+
 Run `install.sh`:
 ```
 chmod +x install.sh
@@ -38,6 +45,6 @@ Make the runner script executable:
 chmod +x build/bg.sh
 ```
 # Usage
-To use the program, run it with `./bg.py`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled.
+To use the program, cd to the build directory and run `./bg.sh`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled. The blur factor is also adjustable in options.txt (side note: it must be an odd number).
 # Side notes
-The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. The video may stutter slightly if you move your head a lot (the classifier is kinda slow and cant handle rapid changes). I might do a rewrite in C++ later on to speed it up. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
+As one can see, I did the rewrite. It's still cpu-hungry, but less so, and the framerate is higher. A static build was not possible, and I did not want to force the installation of the many packages required, so all the necessary .so files are in `build/lib`. Not quite sure about this, but ironically the executable + the .so files seem to have a larger total filesize than the python version (with its dependencies!). Who would have thought that the C++ version would be the mega thicc one? It works well in WebRTC and video conferencing apps, however reading from the virtual webcam with `ffplay` takes persistence. If it cannot find your face, it just blurs the whole image. Mad props to OscarAcena for his [article](https://arcoresearchgroup.wordpress.com/2020/06/02/virtual-camera-for-opencv-using-v4l2loopback/) on using v4l2loopback with OpenCV in C++.
