@@ -109,14 +109,21 @@ int main()
 	}
 	CascadeClassifier cas;
 	cas.load("lbpcascade_frontalface_improved.xml");
+	Rect lastRect;
 	for(;;){
 		cap >> frame;
 		if(frame.empty())
 		{
 			continue;
 		}
+		Mat sec;
 		vector<Rect> faces;
 		cas.detectMultiScale(frame,faces,1.2,2,0|CASCADE_SCALE_IMAGE,Size(30,30));
+		if(faces.empty())
+		{
+			blur(frame,frame,Size(set[5],set[5]));
+			goto disp;
+		}
 		faces[0].x-=set[0];
 		faces[0].y-=set[1];
 		faces[0].width+=set[2];
@@ -126,12 +133,13 @@ int main()
 			continue;
 		}
 //		cout << faces[0].x << endl << faces[0].y << endl << faces[0].width << endl << faces[0].height << endl;
-		Mat sec = Mat(frame,faces[0]).clone();
+		sec = Mat(frame,faces[0]).clone();
 		blur(frame,frame,Size(set[5],set[5]));
 		sec.copyTo(frame(faces[0]));
 		if(set[4]){
 			rectangle(frame,faces[0],Scalar(0,250,0));
 		}
+		disp:
 //		imshow("win",frame);
 		writeFrame(frame);
 /*		if(waitKey(1)=='q')
