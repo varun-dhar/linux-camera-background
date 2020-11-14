@@ -1,5 +1,5 @@
 # linux-camera-background
-Blurs your background on linux for video conferencing. 
+Blurs your background for video conferencing on linux. 
 
 # How it works
 This program uses lbp cascades to find face(s) in the video feed, then cuts out the section of the image containing the face(s), stores that section, blurs the original image, and superimposes the cut section on top of the blurred image, then sends the edited frames to another video device.
