@@ -4,4 +4,4 @@ echo "options v4l2loopback devices=1 video_nr=20 card_label="bgcam" exclusive_ca
 echo v4l2loopback > /etc/modules-load.d/bgcam.conf
 modprobe -r v4l2loopback
 modprobe v4l2loopback
-chmod +x bg.sh
+chmod +x build/bg.sh
