@@ -44,6 +44,10 @@ Make the runner script executable:
 ```
 chmod +x build/bg.sh
 ```
+Other systems:
+
+Install the `v4l2loopback` module using whatever package manager you use, then follow the same steps from "Add config for v4l2loopback".
+
 # Usage
 To use the program, cd to the build directory and run `./bg.sh`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled. The blur factor is also adjustable in options.txt (side note: it must be an odd number).
 # Side notes
