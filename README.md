@@ -6,6 +6,11 @@ This program uses lbp cascades to find face(s) in the video feed, then cuts out 
 # Install
 Debian and deb-based systems:
 
+Clone the repo:
+```
+git clone https://github.com/varun-dhar/linux-camera-background.git
+```
+
 Run `install.sh`:
 ```
 chmod +x install.sh
