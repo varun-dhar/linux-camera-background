@@ -3,6 +3,7 @@ Blurs your background for video conferencing on linux.
 
 # How it works
 This program uses lbp cascades to find face(s) in the video feed, then cuts out the section of the image containing the face(s), stores that section, blurs the original image, and superimposes the cut section on top of the blurred image, then sends the edited frames to another video device.
+
 # Install
 Debian and deb-based systems:
 
@@ -51,4 +52,6 @@ Install the `v4l2loopback` module using whatever package manager you use, then f
 # Usage
 To use the program, run it with `./bg.py`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled.
 # Side notes
+There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. This is not an issue with this program, it is a v4l2loopback issue which has already been reported to the developers.
+
 The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. The video may stutter slightly if you move your head a lot (the classifier is kinda slow and cant handle rapid changes). C++ rewrite has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient, has a higher framerate and weirldy, is much larger. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
