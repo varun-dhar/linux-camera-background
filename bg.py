@@ -36,6 +36,7 @@ ops.append(int(conf['ADJUSTMENTS']['topLeftY']))
 ops.append(int(conf['ADJUSTMENTS']['width']))
 ops.append(int(conf['ADJUSTMENTS']['height']))
 ops.append(int(conf['ADJUSTMENTS']['showRect']))
+ops.append(int(conf['ADJUSTMENTS']['blurFactor']))
 del conf
 
 cas = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
@@ -61,7 +62,7 @@ while True:
 	if any(t is None for t in (x,y,w,h)):
 		continue
 	sec = disp[int(y):int(y+h),int(x):int(x+w)].copy()
-	disp = cv2.blur(disp,(15,15))
+	disp = cv2.blur(disp,(ops[5],ops[5]))
 	disp[int(y):int(y+h),int(x):int(x+w)] = sec
 #	cv2.imshow('frame',disp)
 	disp = cv2.cvtColor(disp,cv2.COLOR_BGR2RGB)
