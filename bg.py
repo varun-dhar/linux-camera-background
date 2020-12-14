@@ -26,48 +26,40 @@ import cv2
 import numpy as np
 import configparser
 import pyfakewebcam as wc
+import tensorflow as tf
+from tf_bodypix.api import download_model, load_model, BodyPixModelPaths
+
+model = load_model(download_model(BodyPixModelPaths.MOBILENET_FLOAT_50_STRIDE_16))
 
 ops = []
+bgimage = None
 cam = wc.FakeWebcam('/dev/video20',1280,720)
 conf = configparser.ConfigParser()
 conf.read('options.txt')
-ops.append(int(conf['ADJUSTMENTS']['topLeftX']))
-ops.append(int(conf['ADJUSTMENTS']['topLeftY']))
-ops.append(int(conf['ADJUSTMENTS']['width']))
-ops.append(int(conf['ADJUSTMENTS']['height']))
-ops.append(int(conf['ADJUSTMENTS']['showRect']))
 ops.append(int(conf['ADJUSTMENTS']['blurFactor']))
+ops.append(int(conf['ADJUSTMENTS']['useImageBg']))
+bgimage = conf['ADJUSTMENTS']['backgroundFile']
+ops.append(int(conf['ADJUSTMENTS']['maskSensitivity']))
 del conf
 
-cas = cv2.CascadeClassifier('lbpcascade_frontalface_improved.xml')
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
 
 while True:
 	ret,frame = cap.read()
-	if not ret:
-		continue
-	disp = frame.copy()
-	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	face = cas.detectMultiScale(frame,1.2,4)
-	x = y = w = h = None
-	for (x,y,w,h) in face:
-		x-=ops[0]
-		y-=ops[1]
-		w+=ops[2]
-		h+=ops[3]
-		if ops[4] == 1:
-			cv2.rectangle(disp, (x, y), (x+w, y+h), (255, 0, 0), 2)
-	if any(t is None for t in (x,y,w,h)):
-		continue
-	sec = disp[int(y):int(y+h),int(x):int(x+w)].copy()
-	disp = cv2.blur(disp,(ops[5],ops[5]))
-	disp[int(y):int(y+h),int(x):int(x+w)] = sec
-#	cv2.imshow('frame',disp)
-	disp = cv2.cvtColor(disp,cv2.COLOR_BGR2RGB)
-	cam.schedule_frame(disp)
-	if cv2.waitKey(1) == ord('q'):
-		break
+	mask = model.predict_single(frame)
+	mask = mask.get_mask(threshold=ops[2]/100)
+	inv_mask = 1-mask
+	clear = frame.copy()
+	if ops[1] == 0:
+		frame = cv2.blur(frame,(ops[0],ops[0]))
+	else:
+		frame = cv2.imread(bgimage)
+		frame = cv2.resize(frame,(1280,720))
+	for i in range(frame.shape[2]):
+		clear[:,:,i] = clear[:,:,i]*mask[:,:,0] + frame[:,:,i]*inv_mask[:,:,0]
+	clear = cv2.cvtColor(clear,cv2.COLOR_BGR2RGB)
+	cam.schedule_frame(clear)
 cap.release()
 cv2.destroyAllWindows()
