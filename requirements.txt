@@ -1,0 +1,6 @@
+numpy
+opencv-contrib-python
+pyfakewebcam
+tensorflow
+tf-bodypix
+tfjs-graph-converter
