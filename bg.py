@@ -67,7 +67,7 @@ while True:
 #	cv2.imshow('frame',disp)
 	disp = cv2.cvtColor(disp,cv2.COLOR_BGR2RGB)
 	cam.schedule_frame(disp)
-	if cv2.waitKey(1) == ord('q'):
-		break
+#	if cv2.waitKey(1) == ord('q'):
+#		break
 cap.release()
 cv2.destroyAllWindows()
