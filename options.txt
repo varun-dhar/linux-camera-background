@@ -1,7 +1,5 @@
 [ADJUSTMENTS]
-topLeftX=45
-topLeftY=75
-width=80
-height=150
-showRect=0
-blurFactor=75
+blurFactor=74
+useImageBg=0
+backgroundFile=
+maskSensitivity=83
