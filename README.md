@@ -55,8 +55,11 @@ To use the program, run it with `./bg.py`. The new webcam device will show up in
 
 # Config file
 `blurFactor`- value from 0-100 determining how much you want to blur the background.
+
 `useImageBg`- value from 0-1 determining whether or not you want to use a background image file. 0 is false, 1 is true.
+
 `backgroundFile`- path to background image you want to use. Optional, doesn't do anything if `useImageBg` is 0.
+
 `maskSensitivity`- value from 0-100 determining how sensitive the mask should be. Decrease if parts of your face/body are cut off, increase if there are random blotches of (original) background appearing.
 
 # Side notes
