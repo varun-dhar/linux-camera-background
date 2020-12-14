@@ -4,5 +4,5 @@ echo "options v4l2loopback devices=1 video_nr=20 card_label="bgcam" exclusive_ca
 echo v4l2loopback > /etc/modules-load.d/bgcam.conf
 modprobe -r v4l2loopback
 modprobe v4l2loopback
-python3 -m pip install numpy opencv-contrib-python pyfakewebcam
+python3 -m pip install -r requirements.txt
 chmod +x bg.py
