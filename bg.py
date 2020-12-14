@@ -41,6 +41,7 @@ ops.append(int(conf['ADJUSTMENTS']['useImageBg']))
 bgimage = conf['ADJUSTMENTS']['backgroundFile']
 ops.append(int(conf['ADJUSTMENTS']['maskSensitivity']))
 del conf
+ops[0] = ops[0]+1 if (ops[0]%2)==0 else ops[0]
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
