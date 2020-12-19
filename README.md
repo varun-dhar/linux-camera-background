@@ -26,7 +26,7 @@ sudo apt install v4l2loopback-dkms
 ```
 Add config for v4l2loopback:
 ```
-echo "options v4l2loopback devices=1 video_nr=20 card_label="bgcam" exclusive_caps=1" | sudo tee -a /etc/modprobe.d/bgcam.conf
+echo "options v4l2loopback devices=1 video_nr=20 card_label=bgcam exclusive_caps=1" | sudo tee -a /etc/modprobe.d/bgcam.conf
 ```
 You can also manually create a .conf file in /etc/modprobe.d with those options and/or change the card_label (what the device appears as) or video_nr (the device number, e.g. /dev/video1 for device number 1) fields. Changing video_nr is not recommended, as you will also have to set pyfakewebcam to use it in the script. 
 
