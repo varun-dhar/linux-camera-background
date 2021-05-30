@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '''
 MIT License
 
@@ -44,11 +44,13 @@ del conf
 ops[0] = ops[0]+1 if (ops[0]%2)==0 else ops[0]
 
 cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 while True:
 	ret,frame = cap.read()
+	if not ret:
+		break
 	mask = model.predict_single(frame)
 	mask = mask.get_mask(threshold=ops[2]/100)
 	inv_mask = 1-mask
@@ -57,10 +59,9 @@ while True:
 		frame = cv2.blur(frame,(ops[0],ops[0]))
 	else:
 		frame = cv2.imread(bgimage)
-		frame = cv2.resize(frame,(1280,720))
+		frame = cv2.resize(frame,(width,height))
 	for i in range(frame.shape[2]):
 		clear[:,:,i] = clear[:,:,i]*mask[:,:,0] + frame[:,:,i]*inv_mask[:,:,0]
 	clear = cv2.cvtColor(clear,cv2.COLOR_BGR2RGB)
 	cam.schedule_frame(clear)
 cap.release()
-cv2.destroyAllWindows()
