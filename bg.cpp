@@ -23,7 +23,12 @@ SOFTWARE.
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/objdetect.hpp>
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <array>
+#include <csignal>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/videodev2.h>
@@ -31,62 +36,56 @@ SOFTWARE.
 #include <sys/types.h>
 #include <fcntl.h>
 
-using namespace cv;
-using namespace std;
-
 #define NUM_OPS 6
 #define VID_OUT "/dev/video20"
 
 static int out;
 
-static void setup(int set[])
+static void setup(std::array<int,NUM_OPS>& set, int width, int height)
 {
-	string search[NUM_OPS]={"topLeftX=","topLeftY=","width=","height=","showRect=","blurFactor="};
-	ifstream in("options.txt");
-	stringstream ss;
+	std::array<std::string,NUM_OPS> search {"topLeftX=","topLeftY=","width=","height=","showRect=","blurFactor="};
+	std::ifstream in("options.txt");
+	std::stringstream ss;
 	ss << in.rdbuf();
 	in.close();
-	string s = ss.str();
+	std::string s = ss.str();
 	for(int i = 0;i<NUM_OPS;i++)
 	{
 		int pos = s.find(search[i]);
-//		cout << s.substr(pos+search[i].length(),pos+search[i].length()-s.find('\n',pos)) << endl;
-		set[i] = stoi(s.substr(pos+search[i].length(),pos+search[i].length()-s.find('\n',pos)));
+//		std::cout << s.substr(pos+search[i].length(),pos+search[i].length()-s.find('\n',pos)) << '\n';
+		set[i] = std::stoi(s.substr(pos+search[i].length(),pos+search[i].length()-s.find('\n',pos)));
 	}
 	out = open(VID_OUT,O_RDWR);
 	if(out<0)
 	{
-		cout << "Could not open virtual camera device" << endl;
+		std::cout << "Could not open virtual camera device\n";
 		exit(1);
 	}
-	struct v4l2_format format;
-	memset(&format,0,sizeof(format));
+	struct v4l2_format format{};
 	format.type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
 	if(ioctl(out,VIDIOC_G_FMT,&format) < 0){
-		cout << "Could not configure virtual camera device" << endl;
+		std::cout << "Could not configure virtual camera device\n";
 		close(out);
 		exit(1);
 	}
-	format.fmt.pix.width = 1280;
-	format.fmt.pix.height = 720;
+	format.fmt.pix.width = width;
+	format.fmt.pix.height = height;
 	format.fmt.pix.pixelformat = V4L2_PIX_FMT_RGB24;
-	format.fmt.pix.sizeimage = 3*1280*720;
+	format.fmt.pix.sizeimage = 3*width*height;
 	format.fmt.pix.field = V4L2_FIELD_NONE;
 	if(ioctl(out,VIDIOC_S_FMT,&format) < 0){
-		cout << "Could not configure virtual camera device" << endl;
+		std::cout << "Could not configure virtual camera device\n";
 		close(out);
 		exit(1);
 	}
 }
 
 
-void writeFrame(Mat frame)
+void writeFrame(cv::Mat& frame,int width,int height)
 {
-	cvtColor(frame,frame,COLOR_BGR2RGB);
-	int written = write(out,frame.data,3*1280*720);
-	if(written < 0)
+	if(write(out,frame.data,3*width*height) < 0)
 	{
-		cout << "Could not write to virtual camera device" << endl;
+		std::cout << "Could not write to virtual camera device\n";
 	}
 }
 
@@ -99,30 +98,33 @@ void sigHandler(int sig)
 int main()
 {
 	signal(SIGINT,sigHandler);
-	int set[NUM_OPS] = {0};
-	setup(set);
-	Mat frame;
-	VideoCapture cap(0);
+	std::array<int,NUM_OPS> set{};
+	cv::VideoCapture cap(0);
 	if(!cap.isOpened())
 	{
-		cout << "Could not start webcam" << endl;
+		std::cout << "Could not start webcam\n";
 	}
-	CascadeClassifier cas;
+	int width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+	int height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+	setup(set,width,height);
+	cv::Mat frame;
+	cv::CascadeClassifier cas;
 	cas.load("lbpcascade_frontalface_improved.xml");
-	Rect lastRect;
+	cv::Mat lastFrame;
 	for(;;){
 		cap >> frame;
 		if(frame.empty())
 		{
 			continue;
 		}
-		Mat sec;
-		vector<Rect> faces;
-		cas.detectMultiScale(frame,faces,1.2,2,0|CASCADE_SCALE_IMAGE,Size(30,30));
+		cv::Mat sec,frame_gray;
+		cv::cvtColor(frame,frame_gray,cv::COLOR_BGR2GRAY);
+		std::vector<cv::Rect> faces;
+		cas.detectMultiScale(frame_gray,faces,1.2,2,0|cv::CASCADE_SCALE_IMAGE,cv::Size(30,30));
 		if(faces.empty())
 		{
-			blur(frame,frame,Size(set[5],set[5]));
-			goto disp;
+			writeFrame(lastFrame,width,height);
+			continue;
 		}
 		faces[0].x-=set[0];
 		faces[0].y-=set[1];
@@ -132,20 +134,16 @@ int main()
 		{
 			continue;
 		}
-//		cout << faces[0].x << endl << faces[0].y << endl << faces[0].width << endl << faces[0].height << endl;
-		sec = Mat(frame,faces[0]).clone();
-		blur(frame,frame,Size(set[5],set[5]));
+//		std::cout << faces[0].x << '\n' << faces[0].y << '\n' << faces[0].width << '\n' << faces[0].height << '\n';
+		sec = cv::Mat(frame,faces[0]).clone();
+		cv::blur(frame,frame,cv::Size(set[5],set[5]));
 		sec.copyTo(frame(faces[0]));
 		if(set[4]){
-			rectangle(frame,faces[0],Scalar(0,250,0));
+			cv::rectangle(frame,faces[0],cv::Scalar(0,250,0));
 		}
-		disp:
-//		imshow("win",frame);
-		writeFrame(frame);
-/*		if(waitKey(1)=='q')
-		{
-			break;
-		}*/
+		cv::cvtColor(frame,frame,cv::COLOR_BGR2RGB);
+		writeFrame(frame,width,height);
+		lastFrame = frame.clone();
 	}
 	close(out);
 }
