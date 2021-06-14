@@ -41,7 +41,6 @@ sudo modprobe -r v4l2loopback
 sudo modprobe v4l2loopback
 ```
 Install dependencies:
-(I'm assuming you have a functional python3 environment with pip)
 ```
 python3 -m pip install -r requirements.txt
 ```
