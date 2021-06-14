@@ -1,5 +1,6 @@
 [ADJUSTMENTS]
 blurFactor=74
-useImageBg=0
 backgroundFile=
 maskSensitivity=83
+frameHeight=
+frameWidth=
