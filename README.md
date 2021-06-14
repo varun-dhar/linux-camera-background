@@ -40,7 +40,6 @@ sudo modprobe -r v4l2loopback
 sudo modprobe v4l2loopback
 ```
 Install dependencies:
-(I'm assuming you have a functional python3 environment with pip)
 ```
 python3 -m pip install numpy opencv-contrib-python pyfakewebcam
 ```
@@ -52,8 +51,6 @@ Install the `v4l2loopback` module using whatever package manager you use, then f
 # Usage
 To use the program, run it with `./bg.py`. The new webcam device will show up in your conferencing application as whatever card_label is in the v4l2loopback config (default bgcam). In options.txt, one can configure the offsets for the size of the cutout and its position on the screen. You can also enable and disable the rectangle that marks the cutout to help with the adjustment process by inputting a 0 for disabled and 1 for enabled.
 # Side notes
-There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. If you experience this, check for updates to v4l2loopback and your kernel, and if available, install them. If not, try restarting. Theres another issue where the virtual webcam can't be found in MS Teams. This is likely a Teams issue; though this is not confirmed. I would submit a bug report, but if I know anything about MS's maintenance team, it's that they never listen to their users(one of the reasons I made this). However, this is my personal opinion (which doesn't matter), so feel free to submit one yourself. Current workaround is to use the web client or the unofficial [Electron client](https://github.com/IsmaelMartinez/teams-for-linux).
+There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. If you experience this, check for updates to v4l2loopback and your kernel, and if available, install them. If not, try restarting. Theres another issue where the virtual webcam can't be found in MS Teams. This is likely a Teams issue; though this is not confirmed. Current workaround is to use the web client or the unofficial [Electron client](https://github.com/IsmaelMartinez/teams-for-linux).
 
-New features coming soon: Filter that makes you look like a comic. Example shown [here](https://i.ibb.co/f87sHS8/out.jpg) (using a CC image I found by googling "person").
-
-The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. The video may stutter slightly if you move your head a lot (the classifier is kinda slow and cant handle rapid changes). C++ rewrite has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient, has a higher framerate and weirldy, is much larger. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
+The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. The video may stutter slightly if you move your head a lot (the classifier is kinda slow and cant handle rapid changes). C++ rewrite has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient and has a higher framerate. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
