@@ -5,3 +5,5 @@ width=80
 height=150
 showRect=0
 blurFactor=75
+frameWidth=
+frameHeight=
