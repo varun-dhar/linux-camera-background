@@ -18,7 +18,7 @@ Run `install.sh`:
 chmod +x install.sh
 sudo ./install.sh
 ```
-Or do it manually:
+Or install/configure manually:
 
 Install the v4l2loopback kernel module:
 ```
@@ -56,15 +56,15 @@ To use the program, run it with `./bg.py`. The new webcam device will show up in
 # Config file
 `blurFactor`- value from 0-100 determining how much you want to blur the background.
 
-`useImageBg`- value from 0-1 determining whether or not you want to use a background image file. 0 is false, 1 is true.
-
-`backgroundFile`- path to background image you want to use. Optional, doesn't do anything if `useImageBg` is 0.
+`backgroundFile`- path to background image you want to use. Optional, blurs if not specified.
 
 `maskSensitivity`- value from 0-100 determining how sensitive the mask should be. Decrease if parts of your face/body are cut off, increase if there are random blotches of (original) background appearing.
 
+`frameWidth` - the desired frame width, if the defaults are not to your liking.
+
+`frameHeight` - the desired frame height, if the defaults are not to your liking.
+
 # Side notes
-There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. If you experience this, check for updates to v4l2loopback and your kernel, and if available, install them. If not, try restarting. Theres another issue where the virtual webcam can't be found in MS Teams. This is likely a Teams issue; though this is not confirmed. I would submit a bug report, but if I know anything about MS's maintenance team, it's that they never listen to their users(one of the reasons I made this). However, this is my personal opinion (which doesn't matter), so feel free to submit one yourself. Current workaround is to use the web client or the unofficial [Electron client](https://github.com/IsmaelMartinez/teams-for-linux).
+There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. If you experience this, check for updates to v4l2loopback and your kernel, and if available, install them. If not, try restarting. Theres another issue where the virtual webcam can't be found in MS Teams. This is likely a Teams issue; though this is not confirmed. Current workaround is to use the web client or the unofficial [linux Electron client](https://github.com/IsmaelMartinez/teams-for-linux).
 
-New features coming soon: Filters! (when I get around to it).
-
-The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. However, it ran fine on my mid range 4yo laptop with ~6 resource-intensive windows open, so it should be fine. The video may stutter slightly if you move your head a lot (the model is kinda slow if you don't have good specs and cant handle rapid changes). I might do a C++ rewrite of this code, but probably not, as there is little documentation on using TensorFlow Bodypix in C++. C++ rewrite of the version on the `python-old` branch has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient, has a higher framerate and weirldy, is much larger. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
+The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. However, it ran fine on my mid range 5yo laptop with ~6 resource-intensive windows open, so it should be fine. The video may stutter slightly if you move around a lot and other cpu-intensive programs are open (the model is kinda slow if you don't have good specs and cant handle rapid changes when low on resources). I might do a C++ rewrite of this code, but probably not, as there is little documentation on using TensorFlow Bodypix in C++. C++ rewrite of the version on the `python-old` branch has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient and has a higher framerate. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
