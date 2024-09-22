@@ -62,8 +62,3 @@ To use the program, run it with `./bg.py`. The new webcam device will show up in
 `frameWidth` - the desired frame width, if the defaults are not to your liking.
 
 `frameHeight` - the desired frame height, if the defaults are not to your liking.
-
-# Side notes
-There's an issue where the virtual webcam device can't be found unless using a Chromium-based application. If you experience this, check for updates to v4l2loopback and your kernel, and if available, install them. If not, try restarting. Theres another issue where the virtual webcam can't be found in MS Teams. This is likely a Teams issue; though this is not confirmed. Current workaround is to use the web client or the unofficial [linux Electron client](https://github.com/IsmaelMartinez/teams-for-linux).
-
-The program does use a lot of CPU resources so expect slowdowns if you have other CPU-hungry programs open. However, it ran fine on my mid range 5yo laptop with ~6 resource-intensive windows open, so it should be fine. The video may stutter slightly if you move around a lot and other cpu-intensive programs are open (the model is kinda slow if you don't have good specs and cant handle rapid changes when low on resources). I might do a C++ rewrite of this code, but probably not, as there is little documentation on using TensorFlow Bodypix in C++. C++ rewrite of the version on the `python-old` branch has been completed and is on the `cpp-rewrite` branch; it's more resource-efficient and has a higher framerate. Contributions are welcome and appreciated. Feature requests may be submitted on the issues page. 
